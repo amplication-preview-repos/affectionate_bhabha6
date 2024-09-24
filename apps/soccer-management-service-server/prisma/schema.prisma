@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Team {
+  captain        String?
+  createdAt      DateTime        @default(now())
+  id             String          @id @default(cuid())
+  playerProfiles PlayerProfile[]
+  teamName       String?
+  updatedAt      DateTime        @updatedAt
+}
+
+model PlayerProfile {
+  createdAt DateTime                  @default(now())
+  id        String                    @id @default(cuid())
+  position  String?
+  skills    EnumPlayerProfileSkills[]
+  team      Team?                     @relation(fields: [teamId], references: [id])
+  teamId    String?
+  updatedAt DateTime                  @updatedAt
+}
+
+model Match {
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  location  String?
+  matchDate DateTime?
+  updatedAt DateTime  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumPlayerProfileSkills {
+  Option1
+}
